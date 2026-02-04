@@ -3,22 +3,49 @@ name: Publish to NPM
 on:
     push:
         branches:
-            - main
+            - master
+        paths:
+            - 'package.json' # Только при изменении package.json
+            - 'libs/**' # Или ваших исходных файлов
+    workflow_dispatch: # Ручной запуск
 
 jobs:
     publish:
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+
         steps:
-            - name: Get Codes from Repo
+            - name: Checkout Repository
               uses: actions/checkout@v4
-            - name: Setup  Node.js
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: 'lts/*'
-                  registry-url: https://registry.npmjs.org
-            - name: Pprettier Format
+                  registry-url: 'https://registry.npmjs.org/'
+                  # cache: 'npm'  # Кэширование зависимостей (опционально)
+
+            - name: Install Dependencies
+              run: npm ci --ignore-scripts # Без postinstall скриптов
+
+            - name: Run Prettier Format
               run: npm run format
-            - name: Publish to NPM
-              run: npm publish
+
+            - name: Build Package
+              run: npm run build
+
+            - name: Verify Version
+              id: version-check
+              run: |
+                  CURRENT_VERSION=$(node -p "require('./package.json').version")
+                  echo "Current version: $CURRENT_VERSION"
+                  echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+            - name: Publish to npm
+              run: npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
