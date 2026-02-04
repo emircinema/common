@@ -1,6 +1,6 @@
 {
 	"name": "@emircinema/common",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"keywords": [],
 	"author": "emir",
 	"main": "dist/index.js",
