@@ -4,10 +4,10 @@ on:
     push:
         branches:
             - master
-        paths:
-            - 'package.json' # Только при изменении package.json
-            - 'libs/**' # Или ваших исходных файлов
-    workflow_dispatch: # Ручной запуск
+    #     paths:
+    #         - 'package.json' # Только при изменении package.json
+    #         - 'libs/**' # Или ваших исходных файлов
+    # workflow_dispatch: # Ручной запуск
 
 jobs:
     publish:
@@ -37,6 +37,13 @@ jobs:
 
             - name: Build Package
               run: npm run build
+
+            - name: Verify Version
+              id: version-check
+              run: |
+                  CURRENT_VERSION=$(node -p "require('./package.json').version")
+                  echo "Current version: $CURRENT_VERSION"
+                  echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
             - name: Publish to npm
               run: npm publish --access public
