@@ -1,0 +1,24 @@
+name: Publish to NPM
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get Codes from Repo
+              uses: actions/checkout@v4
+            - name: Setup  Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 'lts/*'
+                  registry-url: https://registry.npmjs.org
+            - name: Pprettier Format
+              run: npm run format
+            - name: Publish to NPM
+              run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,26 @@
+{
+	"name": "@emircinema/common",
+	"version": "1.0.0",
+	"keywords": [],
+	"author": "emir",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"format": "prettier --write \"libs/**/*.ts\""
+	},
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@emircinema/core": "^1.0.6",
+		"@types/node": "^25.2.0",
+		"prettier": "^3.8.1",
+		"typescript": "^5.9.3"
+	}
+}
